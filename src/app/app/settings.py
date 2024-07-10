@@ -44,7 +44,8 @@ INSTALLED_APPS = [
 
     # local apps
 
-
+    'core',
+    'statistic'
 ]
 
 MIDDLEWARE = [
