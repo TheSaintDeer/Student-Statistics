@@ -9,7 +9,6 @@ app_name = 'statistic'
 router = routers.DefaultRouter()
 router.register(r'student', views.StudentViewSet)
 router.register(r'university', views.UniversityViewSet)
-router.register(r'direction', views.DirectionViewSet)
 router.register(r'specialization', views.SpecializationViewSet)
 router.register(r'collecting-documets', views.CollectingDocumetsStageViewSet)
 router.register(r'university-choice', views.UniversityChoiceStageViewSet)

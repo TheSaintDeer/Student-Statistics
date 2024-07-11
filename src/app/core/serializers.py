@@ -14,15 +14,7 @@ class UniversitySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.University
-        fields = '__all__'
-
-
-class DirectionSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = models.Direction
-        fields = '__all__'
-
+        fields = ['name',]
 
 class SpecializationSerializer(serializers.ModelSerializer):
 

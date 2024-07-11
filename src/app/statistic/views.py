@@ -1,4 +1,7 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, mixins, status
+from django.shortcuts import get_object_or_404, get_list_or_404
+from rest_framework.decorators import action
+from rest_framework.response import Response
 
 from core import serializers, models
 
@@ -8,15 +11,18 @@ class StudentViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.StudentSerializer
 
 
-class UniversityViewSet(viewsets.ModelViewSet):
+class UniversityViewSet(mixins.CreateModelMixin,
+                        mixins.ListModelMixin,
+                        mixins.DestroyModelMixin,
+                        viewsets.GenericViewSet):
     queryset = models.University.objects.all()
     serializer_class = serializers.UniversitySerializer
 
-
-class DirectionViewSet(viewsets.ModelViewSet):
-    queryset = models.Direction.objects.all()
-    serializer_class = serializers.DirectionSerializer
-
+    @action(detail=False, methods=['delete'])
+    def destroy_by_name(self, request):
+        university = get_object_or_404(self.get_queryset(), name=request.data['name'])
+        self.perform_destroy(university)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 class SpecializationViewSet(viewsets.ModelViewSet):
     queryset = models.Specialization.objects.all()
