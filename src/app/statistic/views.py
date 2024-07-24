@@ -23,6 +23,12 @@ class StudentViewSet(viewsets.ModelViewSet):
 
         return Response(serializer.data)
 
+    @action(detail=False, methods=['delete'])
+    def destroy_by_name(self, request):
+        student = get_object_or_404(self.get_queryset(), name=request.data['name'])
+        self.perform_destroy(student)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 class UniversityViewSet(mixins.CreateModelMixin,
                         mixins.ListModelMixin,
