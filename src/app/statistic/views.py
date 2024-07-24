@@ -10,6 +10,19 @@ class StudentViewSet(viewsets.ModelViewSet):
     queryset = models.Student.objects.all()
     serializer_class = serializers.StudentSerializer
 
+    def update(self, request, *args, **kwargs):
+        return super().update(request, *args, **kwargs)
+
+    @action(detail=False, methods=['post'])
+    def update_by_name(self, request, *args, **kwargs):
+        print(request.data)
+        student = get_object_or_404(self.get_queryset(), name=request.data['stud_name'])
+        serializer = self.get_serializer(student, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        return Response(serializer.data)
+
 
 class UniversityViewSet(mixins.CreateModelMixin,
                         mixins.ListModelMixin,

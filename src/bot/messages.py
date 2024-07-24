@@ -17,10 +17,3 @@ UNIVERSITY:
 not_found_command_message = '''
 I beg your pardon, I don't know this command. 
 '''
-
-def print_univ(list):
-    text = ''
-    for l in list:
-        text += f"{l['name']}\n"
-
-    return text
