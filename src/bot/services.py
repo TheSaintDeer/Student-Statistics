@@ -32,7 +32,6 @@ def university_create(bot: TeleBot, chat_id: Message, name: str) -> None:
     '''Create new university'''
     
     r = requests.post(BASE_URL+'university/', data={'name': name})
-    print(r.status_code, r.json())
 
     if r.status_code == 201:
         bot.send_message(chat_id, "The university was created")
@@ -46,7 +45,6 @@ def university_delete(bot: TeleBot, chat_id: Message, name: str) -> None:
     '''Create new university'''
     
     r = requests.delete(BASE_URL+'university/destroy_by_name/', data={'name': name})
-    print(r.status_code)
     
     if r.status_code == 204:
         bot.send_message(chat_id, "The university was deleted")
