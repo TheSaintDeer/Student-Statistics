@@ -48,6 +48,7 @@ class University(models.Model):
 
     class Meta:
         verbose_name_plural = 'universities'
+        ordering = ['name']
 
 
 class Specialization(models.Model):
