@@ -1,9 +1,16 @@
-import requests
+import requests, datetime
 
 from telebot import TeleBot, util
 from telebot.types import Message, CallbackQuery
 
 from local_settings import BASE_URL
+
+
+def convert_date(date: str):
+    try: 
+        return [int(d) for d in date.split('/')]
+    except:
+        return None
 
 
 def get_chat_id_by_type(data: Message|CallbackQuery) -> int:
@@ -15,22 +22,29 @@ def get_chat_id_by_type(data: Message|CallbackQuery) -> int:
     return data.message.chat.id
 
 
-def set_name_and_do_func(bot: TeleBot, message: Message, chat_id: int, func):
+def set_name_and_do_func(message: Message, bot: TeleBot, chat_id: int, func):
     '''Take the entered university name and do certain function'''
     func(bot=bot, chat_id=chat_id, name=message.text)
 
 
-def get_param_and_value():
+def get_param_and_value(bot: TeleBot, chat_id: int, name: str):
     '''Get information about the field name and its new value 
     that the user wants to change'''
-    pass
+
+    text = '''
+        Enter field name and new value in format:\n
+    Field_Name1 - New_Value1
+    Field_Name2 - New_Value2
+    '''
+    msg = bot.send_message(chat_id, text)
+    bot.register_next_step_handler(msg, student_update, bot, chat_id, name)
 
 
 def order_processing(bot: TeleBot, data: Message|CallbackQuery, func):
     '''Processing a user order'''
     chat_id = get_chat_id_by_type(data)
     msg = bot.send_message(chat_id, "Enter name:")
-    bot.register_next_step_handler(msg, set_name_and_do_func, chat_id, func)
+    bot.register_next_step_handler(msg, set_name_and_do_func, bot, chat_id, func)
 
 
 def university_list(bot: TeleBot, chat_id: int) -> None:
@@ -46,7 +60,7 @@ def university_list(bot: TeleBot, chat_id: int) -> None:
         bot.send_message(chat_id, "Uknown problem.")
 
     
-def university_create(bot: TeleBot, chat_id: Message, name: str) -> None:
+def university_create(bot: TeleBot, chat_id: int, name: str) -> None:
     '''Create new university'''
     
     r = requests.post(BASE_URL+'university/', data={'name': name})
@@ -59,10 +73,10 @@ def university_create(bot: TeleBot, chat_id: Message, name: str) -> None:
         bot.send_message(chat_id, "Uknown problem.")
 
 
-def university_delete(bot: TeleBot, chat_id: Message, name: str) -> None:
+def university_delete(bot: TeleBot, chat_id: int, name: str) -> None:
     '''Delete university'''
     
-    r = requests.delete(BASE_URL+'university/destroy_by_name/', data={'name': name})
+    r = requests.delete(BASE_URL+'university/'+name+'/')
     
     if r.status_code == 204:
         bot.send_message(chat_id, "The university was deleted")
@@ -72,7 +86,7 @@ def university_delete(bot: TeleBot, chat_id: Message, name: str) -> None:
         bot.send_message(chat_id, "Uknown problem.")
 
 
-def student_create(bot: TeleBot, chat_id: Message, name: str) -> None:
+def student_create(bot: TeleBot, chat_id: int, name: str) -> None:
     '''Create new student'''
     
     r = requests.post(BASE_URL+'student/', data={'name': name})
@@ -85,15 +99,20 @@ def student_create(bot: TeleBot, chat_id: Message, name: str) -> None:
         bot.send_message(chat_id, "Uknown problem.")
 
 
-def student_update(bot: TeleBot, chat_id: Message, name: str, param: str, value: str) -> None:
+def student_update(message: Message, bot: TeleBot, chat_id: int, name: str) -> None:
     '''Delete student by his name'''
+
+    data = dict(name=name)
+    try:
+        data.update(dict((k.strip(), v.strip()) for k,v in 
+                (item.split(' - ') for item in message.text.split('\n'))))
+    except: 
+        bot.send_message(chat_id, "Incorrect input format.")
+        return
     
-    r = requests.post(
-        BASE_URL+'student/update_by_name/', 
-        data={
-            'name': name,    
-            param: value
-        }
+    r = requests.put(
+        BASE_URL+'student/'+name+'/', 
+        data=data
     )
 
     if r.status_code == 200:
@@ -102,10 +121,10 @@ def student_update(bot: TeleBot, chat_id: Message, name: str, param: str, value:
         bot.send_message(chat_id, "Uknown problem.")
 
 
-def student_delete(bot: TeleBot, chat_id: Message, name: str) -> None:
+def student_delete(bot: TeleBot, chat_id: int, name: str) -> None:
     '''Delete student by his name'''
     
-    r = requests.delete(BASE_URL+'student/destroy_by_name/', data={'name': name})
+    r = requests.delete(BASE_URL+'student/'+name+'/')
     
     if r.status_code == 204:
         bot.send_message(chat_id, "The student was deleted")

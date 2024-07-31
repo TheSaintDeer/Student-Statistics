@@ -9,39 +9,14 @@ from core import serializers, models
 class StudentViewSet(viewsets.ModelViewSet):
     queryset = models.Student.objects.all()
     serializer_class = serializers.StudentSerializer
-
-    def update(self, request, *args, **kwargs):
-        return super().update(request, *args, **kwargs)
-
-    @action(detail=False, methods=['post'])
-    def update_by_name(self, request, *args, **kwargs):
-        print(request.data)
-        student = get_object_or_404(self.get_queryset(), name=request.data['stud_name'])
-        serializer = self.get_serializer(student, data=request.data, partial=True)
-        serializer.is_valid(raise_exception=True)
-        self.perform_update(serializer)
-
-        return Response(serializer.data)
-
-    @action(detail=False, methods=['delete'])
-    def destroy_by_name(self, request):
-        student = get_object_or_404(self.get_queryset(), name=request.data['name'])
-        self.perform_destroy(student)
-        return Response(status=status.HTTP_204_NO_CONTENT)
+    lookup_field = 'name'
 
 
-class UniversityViewSet(mixins.CreateModelMixin,
-                        mixins.ListModelMixin,
-                        mixins.DestroyModelMixin,
-                        viewsets.GenericViewSet):
+class UniversityViewSet(viewsets.ModelViewSet):
     queryset = models.University.objects.all()
     serializer_class = serializers.UniversitySerializer
+    lookup_field = 'name'
 
-    @action(detail=False, methods=['delete'])
-    def destroy_by_name(self, request):
-        university = get_object_or_404(self.get_queryset(), name=request.data['name'])
-        self.perform_destroy(university)
-        return Response(status=status.HTTP_204_NO_CONTENT)
 
 class SpecializationViewSet(viewsets.ModelViewSet):
     queryset = models.Specialization.objects.all()

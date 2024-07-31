@@ -14,16 +14,16 @@ Show command list: /help\n
 STUDENTS: /student
     Add new student: /student_create
     Update a student: /student_update
-    Deleted a student from list: /student_delete
-    Restore a student from deleted list: /student_restore
-    Deleted student list: /deleted_students
-    Filtered list of students by arrival time: /filter_arrival
-    Filtered list of students by university: /filter_university
-    Filtered list of students by direction: /filter_direction\n
+    Deleted a student from list: /student_delete  #FIXME
+    Restore a student from deleted list: /student_restore  #TODO
+    Deleted student list: /deleted_students  #TODO
+    Filtered list of students by arrival time: /filter_arrival  #TODO
+    Filtered list of students by university: /filter_university  #TODO
+    Filtered list of students by direction: /filter_direction\n  #TODO
 UNIVERSITY: /university
     View all universities: /university_list
-    Create new university: /university_create {Name of University}
-    Delete university: /university_delete {Name of University}
+    Create new university: /university_create
+    Delete university: /university_delete
 '''
 
 
@@ -49,42 +49,42 @@ def send_welcome(message: Message):
 @bot.callback_query_handler(func=lambda callback: callback.data == 'university_list')
 def show_universities(data: Message|CallbackQuery):
     '''Show all universities'''
-    s.university_list(bot=bot, chat_id=s.get_chat_id_by_type(data))
+    s.university_list(bot, s.get_chat_id_by_type(data))
 
 
 @bot.message_handler(commands=['university_create'])
 @bot.callback_query_handler(func=lambda callback: callback.data == 'university_create')
 def create_university(data: Message|CallbackQuery):
     '''Create new university'''
-    s.order_processing(data, s.university_create)
+    s.order_processing(bot, data, s.university_create)
 
 
 @bot.message_handler(commands=['university_delete'])
 @bot.callback_query_handler(func=lambda callback: callback.data == 'university_delete')
 def delete_university(data: Message|CallbackQuery):
     '''Delete university'''
-    s.order_processing(data, s.university_delete)
+    s.order_processing(bot, data, s.university_delete)
 
 
 @bot.message_handler(commands=['student_create'])
 @bot.callback_query_handler(func=lambda callback: callback.data == 'student_create')
 def create_university(data: Message|CallbackQuery):
     '''Create new student'''
-    s.order_processing(data, s.student_create)
+    s.order_processing(bot, data, s.student_create)
 
 
 @bot.message_handler(commands=['student_update'])
 @bot.callback_query_handler(func=lambda callback: callback.data == 'student_update')
 def create_university(data: Message|CallbackQuery):
     '''Update information about a student'''
-    s.order_processing(data, s.get_param_and_value)
+    s.order_processing(bot, data, s.get_param_and_value)
 
 
 @bot.message_handler(commands=['student_delete'])
 @bot.callback_query_handler(func=lambda callback: callback.data == 'student_delete')
 def create_university(data: Message|CallbackQuery):
     '''Delete student'''
-    s.order_processing(data, s.student_delete)
+    s.order_processing(bot, data, s.student_delete)
 
 
 @bot.message_handler(func=lambda message: True)

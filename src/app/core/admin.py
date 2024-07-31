@@ -4,7 +4,7 @@ from . import models
 
 
 class UniversityAdmin(admin.ModelAdmin):
-    list_display = ['name']
+    list_display = ['pk', 'name']
     list_filter = ['name', ]
     filter_input_length = {
         "name": 3,
