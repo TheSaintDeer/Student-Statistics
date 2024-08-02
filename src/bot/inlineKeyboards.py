@@ -17,6 +17,10 @@ def generate_student_keyboard_markup():
         InlineKeyboardButton("Filter by university", callback_data="filter_university"),
         InlineKeyboardButton("Filter by direction", callback_data="filter_direction"),
     )
+    kb.add(
+        InlineKeyboardButton("Assign student", callback_data="student_assign"),
+        InlineKeyboardButton("Student stage", callback_data="student_stage"),
+    )
     return kb
 
 

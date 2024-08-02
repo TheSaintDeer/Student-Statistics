@@ -4,9 +4,6 @@ from . import models
 
 
 class StudentSerializer(serializers.ModelSerializer):
-    # arrival = serializers.DateField(
-    #     input_formats=["%d/%m/%Y"]
-    # )
 
     class Meta:
         model = models.Student

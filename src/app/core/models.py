@@ -3,6 +3,7 @@ from django.db import models
 
 class Student(models.Model):
     '''Model of each individual student'''
+    
     STAGES = {
         1: 'Collecting Documents',
         2: 'University Choice',
@@ -31,6 +32,8 @@ class Student(models.Model):
         choices=STAGES,
         default=1
     )
+    is_deleted = models.BooleanField(default=False)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f'{self.name}'

@@ -3,16 +3,29 @@ from django.contrib import admin
 from . import models
 
 
+@admin.register(models.University)
 class UniversityAdmin(admin.ModelAdmin):
-    list_display = ['pk', 'name']
-    list_filter = ['name', ]
+    resource_class = models.University
+
+    list_display = ('pk', 'name')
+    list_filter = ('name', )
     filter_input_length = {
         "name": 3,
     }
 
 
-admin.site.register(models.Student)
-admin.site.register(models.University, UniversityAdmin)
+@admin.register(models.Student)
+class StudentAdmin(admin.ModelAdmin):
+    list_display = ('name', 'adequacy', 'arrival', 
+                    'current_stage', 'is_deleted')
+    
+    list_editable = ('adequacy', 'arrival', 'current_stage', 'is_deleted')
+    list_filter = ("name",)
+    filter_input_length = {
+        "name": 3,
+    }
+
+
 admin.site.register(models.Specialization)
 admin.site.register(models.CollectingDocumetsStage)
 admin.site.register(models.UniversityChoiceStage)
