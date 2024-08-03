@@ -95,16 +95,11 @@ class CollectingDocumetsStageViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.CollectingDocumetsStageSerializer
 
 
-class UniversityChoiceStageViewSet(viewsets.ModelViewSet):
-    queryset = models.UniversityChoiceStage.objects.all()
-    serializer_class = serializers.UniversityChoiceStageSerializer
-
-
 class ResidencePermitStageViewSet(viewsets.ModelViewSet):
     queryset = models.ResidencePermitStage.objects.all()
     serializer_class = serializers.ResidencePermitStageSerializer
 
 
-class PreparingToMoveStageViewSet(viewsets.ModelViewSet):
-    queryset = models.PreparingToMoveStage.objects.all()
-    serializer_class = serializers.PreparingToMoveStageSerializer
+class AfterMoveStageViewSet(viewsets.ModelViewSet):
+    queryset = models.AfterMoveStage.objects.all()
+    serializer_class = serializers.AfterMoveStageSerializer

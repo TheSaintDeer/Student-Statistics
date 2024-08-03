@@ -1,37 +1,26 @@
 from django.db import models
+from django.db.models import signals 
+from django.dispatch import receiver
 
 
 class Student(models.Model):
     '''Model of each individual student'''
-    
-    STAGES = {
-        1: 'Collecting Documents',
-        2: 'University Choice',
-        3: 'Residence Permit',
-        4: 'Preparing to Move'
-    }
 
     name = models.CharField(
         max_length=255,
-    )
-    adequacy = models.SmallIntegerField(
-        blank=True,
-        null=True
     )
     universities = models.ManyToManyField(
         'University',
         blank=True,
         through='Specialization'
     )
-    arrival = models.DateField(
-        blank=True,
-        null=True,
-    )
-    current_stage = models.CharField(
-        max_length=255,
-        choices=STAGES,
-        default=1
-    )
+
+    arrival = models.DateField(blank=True, null=True)
+    submission_of_residence_permit = models.DateField(blank=True, null=True)
+    approval_of_residence_permit = models.DateField(blank=True, null=True)
+    visa_submission = models.DateField(blank=True, null=True)
+    visa_approval = models.DateField(blank=True, null=True)
+
     is_deleted = models.BooleanField(default=False)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -95,16 +84,19 @@ class CollectingDocumetsStage(Stage):
     pass
 
 
-class UniversityChoiceStage(Stage):
-    '''Model with university selection step'''
-    pass
-
-
 class ResidencePermitStage(Stage):
     '''Model for the stage of collecting documents for applying for a residence permit'''
     pass
 
 
-class PreparingToMoveStage(Stage):
+class AfterMoveStage(Stage):
     '''Abstract model for stages after visa approval'''
     pass
+
+
+@receiver(signals.post_save, sender=Student)
+def connect_student_and_the_first_stage(sender, instance, **kwargs):
+    '''When a student is created, his first stage is created.'''
+    
+    if kwargs['created']:
+        CollectingDocumetsStage.objects.create(student=instance).save()

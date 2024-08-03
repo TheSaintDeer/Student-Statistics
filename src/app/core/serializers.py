@@ -31,13 +31,6 @@ class CollectingDocumetsStageSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class UniversityChoiceStageSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = models.UniversityChoiceStage
-        fields = '__all__'
-
-
 class ResidencePermitStageSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -45,8 +38,8 @@ class ResidencePermitStageSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class PreparingToMoveStageSerializer(serializers.ModelSerializer):
+class AfterMoveStageSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = models.PreparingToMoveStage
+        model = models.AfterMoveStage
         fields = '__all__'

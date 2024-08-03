@@ -11,9 +11,8 @@ router.register(r'student', views.StudentViewSet)
 router.register(r'university', views.UniversityViewSet)
 router.register(r'specialization', views.SpecializationViewSet)
 router.register(r'collecting-documets', views.CollectingDocumetsStageViewSet)
-router.register(r'university-choice', views.UniversityChoiceStageViewSet)
 router.register(r'residence-permit', views.ResidencePermitStageViewSet)
-router.register(r'preparing-to-move', views.PreparingToMoveStageViewSet)
+router.register(r'preparing-to-move', views.AfterMoveStageViewSet)
 
 urlpatterns = [
     path('api/', include(router.urls)),

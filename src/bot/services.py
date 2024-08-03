@@ -45,7 +45,7 @@ def get_info_for_assing(bot: TeleBot, data: Message|CallbackQuery):
 
     text = '''
 Please enter the information in the following format:
-{Student Name} - {University Name} - {Direction} - {Specialization}
+{Student Name} - {University Name} - {Direction} - {Specialization}\n
 List of all directions: Technical, IT, Humanitarian, Creative, Economic, Natural science
 '''
 
@@ -180,7 +180,7 @@ def deleted_students(bot: TeleBot, chat_id: int) -> None:
     else:
         bot.send_message(chat_id, "Uknown problem.")
 
-def filter_arrival(message: Message, bot: TeleBot, chat_id: int):
+def filter_arrival(message: Message, bot: TeleBot, chat_id: int) -> None:
     try:
         start_time, end_time = (param for param in message.text.split(' - '))
     except:
@@ -196,7 +196,7 @@ def filter_arrival(message: Message, bot: TeleBot, chat_id: int):
     else:
         bot.send_message(chat_id, "Uknown problem.")
 
-def filter_university(message: Message, bot: TeleBot, chat_id: int):
+def filter_university(message: Message, bot: TeleBot, chat_id: int) -> None:
     university = message.text
     r = requests.get(BASE_URL+f'student/filter/?university={university}')
 
@@ -207,7 +207,7 @@ def filter_university(message: Message, bot: TeleBot, chat_id: int):
     else:
         bot.send_message(chat_id, "Uknown problem.")
 
-def filter_direction(message: Message, bot: TeleBot, chat_id: int):
+def filter_direction(message: Message, bot: TeleBot, chat_id: int) -> None:
     direction = None
     try:
         direction = ID_OF_DIRECTIONS[message.text]
@@ -223,7 +223,7 @@ def filter_direction(message: Message, bot: TeleBot, chat_id: int):
     else:
         bot.send_message(chat_id, "Uknown problem.")
 
-def assign_student(message: Message, bot: TeleBot, chat_id: int):
+def assign_student(message: Message, bot: TeleBot, chat_id: int) -> None:
     try:
         student_name, university_name, direction, specialization = (param for param in message.text.split(' - '))
     except:
@@ -245,3 +245,8 @@ def assign_student(message: Message, bot: TeleBot, chat_id: int):
         bot.send_message(chat_id, f"{student_name} has already assigned to {university_name}.")
     else:
         bot.send_message(chat_id, "Uknown problem.")
+
+def student_stage(bot: TeleBot, chat_id: int, name: str) -> None:
+    
+    r = requests.get(BASE_URL+f'student/{name}/')
+    print(r.json())

@@ -146,6 +146,13 @@ def assign_student_to_university(data: Message|CallbackQuery):
     s.get_info_for_assing(bot, data)
 
 
+@bot.message_handler(commands=['student_stage'])
+@bot.callback_query_handler(func=lambda callback: callback.data == 'student_stage')
+def show_stage_of_student(data: Message|CallbackQuery):
+    '''Link a student to a specific university to show their selected university'''
+    s.order_processing(bot, data, s.student_stage)
+
+
 @bot.message_handler(func=lambda message: True)
 def unknown(message: Message):
     '''Answer to unknown message'''
