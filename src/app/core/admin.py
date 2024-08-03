@@ -16,10 +16,20 @@ class UniversityAdmin(admin.ModelAdmin):
 
 @admin.register(models.Student)
 class StudentAdmin(admin.ModelAdmin):
-    list_display = ('name', 'adequacy', 'arrival', 
-                    'current_stage', 'is_deleted')
+    fieldsets = (
+        ("General", {"fields": ("name", "is_deleted", "arrival")}),
+        ("Residence Permit", {"fields": ('submission_of_residence_permit', 'approval_of_residence_permit')}),
+        ("Visa", {"fields": ('visa_submission', 'visa_approval')})
+    )
+    jazzmin_section_order = ("General", "Residence Permit", "Visa")
+
+    list_display = ('name', 'is_deleted', 'arrival',
+                    'submission_of_residence_permit', 'approval_of_residence_permit',
+                    'visa_submission', 'visa_approval')
+    list_editable = ('arrival', 'is_deleted',
+                    'submission_of_residence_permit', 'approval_of_residence_permit',
+                    'visa_submission', 'visa_approval')
     
-    list_editable = ('adequacy', 'arrival', 'current_stage', 'is_deleted')
     list_filter = ("name",)
     filter_input_length = {
         "name": 3,
@@ -28,6 +38,5 @@ class StudentAdmin(admin.ModelAdmin):
 
 admin.site.register(models.Specialization)
 admin.site.register(models.CollectingDocumetsStage)
-admin.site.register(models.UniversityChoiceStage)
 admin.site.register(models.ResidencePermitStage)
-admin.site.register(models.PreparingToMoveStage)
+admin.site.register(models.AfterMoveStage)
