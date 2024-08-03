@@ -40,6 +40,19 @@ def get_param_and_value(bot: TeleBot, chat_id: int, name: str):
     msg = bot.send_message(chat_id, text)
     bot.register_next_step_handler(msg, student_update, bot, chat_id, name)
 
+def get_info_for_assing(bot: TeleBot, data: Message|CallbackQuery):
+    '''Function for collecting information'''
+
+    text = '''
+Please enter the information in the following format:
+{Student Name} - {University Name} - {Direction} - {Specialization}
+List of all directions: Technical, IT, Humanitarian, Creative, Economic, Natural science
+'''
+
+    chat_id = get_chat_id_by_type(data)
+    msg = bot.send_message(chat_id, text)
+    bot.register_next_step_handler(msg, assign_student, bot, chat_id)
+
 def order_processing(bot: TeleBot, data: Message|CallbackQuery, func):
     '''Processing a user order'''
     chat_id = get_chat_id_by_type(data)
@@ -210,3 +223,25 @@ def filter_direction(message: Message, bot: TeleBot, chat_id: int):
     else:
         bot.send_message(chat_id, "Uknown problem.")
 
+def assign_student(message: Message, bot: TeleBot, chat_id: int):
+    try:
+        student_name, university_name, direction, specialization = (param for param in message.text.split(' - '))
+    except:
+        bot.send_message(chat_id, "Incorrect input format.")
+        return
+    
+    data = {
+        "student_name": student_name,
+        "university_name": university_name,
+        "direction": ID_OF_DIRECTIONS[direction],
+        "specialization": specialization,
+    }
+
+    r = requests.post(BASE_URL+'specialization/', data=data)
+
+    if r.status_code == 201:
+        bot.send_message(chat_id, f"{student_name} was assigned to {university_name}.")
+    elif r.status_code == 400:
+        bot.send_message(chat_id, f"{student_name} has already assigned to {university_name}.")
+    else:
+        bot.send_message(chat_id, "Uknown problem.")

@@ -66,6 +66,29 @@ class SpecializationViewSet(viewsets.ModelViewSet):
     queryset = models.Specialization.objects.all()
     serializer_class = serializers.SpecializationSerializer
 
+    def create(self, request, *args, **kwargs):
+        data = {
+            'specialization': request.data['specialization'],
+            'direction': request.data['direction']
+        }
+
+        if request.data['student_name']:
+            data['student'] = models.Student.objects.get(name=request.data['student_name']).pk
+        else: 
+            data['student'] = request.data['student']
+
+        if request.data['university_name']:
+            data['university'] = models.University.objects.get(name=request.data['university_name']).pk
+        else: 
+            data['university'] = request.data['university']
+
+        serializer = self.get_serializer(data=data)
+        if serializer.is_valid():
+            self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
 
 class CollectingDocumetsStageViewSet(viewsets.ModelViewSet):
     queryset = models.CollectingDocumetsStage.objects.all()

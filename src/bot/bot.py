@@ -141,9 +141,9 @@ List of all directions: Technical, IT, Humanitarian, Creative, Economic, Natural
 
 @bot.message_handler(commands=['student_assign'])
 @bot.callback_query_handler(func=lambda callback: callback.data == 'student_assign')
-def assign_studentto_university(data: Message|CallbackQuery):
+def assign_student_to_university(data: Message|CallbackQuery):
     '''Link a student to a specific university to show their selected university'''
-    pass
+    s.get_info_for_assing(bot, data)
 
 
 @bot.message_handler(func=lambda message: True)
